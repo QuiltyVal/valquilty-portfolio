@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { PortfolioAssistantWidget } from "./PortfolioAssistant";
 
 const navItems = [
   { href: "/#top", label: "Start" },
-  { href: "/#ask-val", label: "Ask" },
   { href: "/#team-fit", label: "Team" },
   { href: "/#adhd-planner-case-study", label: "Planner" },
   { href: "/#projects", label: "Lab" },
@@ -113,6 +113,8 @@ export function SiteLayout() {
       </header>
 
       <Outlet />
+
+      {location.pathname === "/" ? <PortfolioAssistantWidget /> : null}
 
       <a
         className={["scroll-top", showBackToTop ? "is-visible" : ""].filter(Boolean).join(" ")}

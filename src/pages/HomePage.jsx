@@ -1,5 +1,4 @@
 import { ButtonLink, ExternalButtonLink, SectionHeader, StaticButton } from "../components/PageElements";
-import { PortfolioAssistant } from "../components/PortfolioAssistant";
 import { ProjectCard } from "../components/ProjectCard";
 import { Reveal } from "../components/Reveal";
 import { siteContent } from "../content/siteContent";
@@ -62,36 +61,6 @@ function TeamFitSection({ teamFit }) {
               </article>
             ))}
           </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function AskValSection({ assistant }) {
-  if (!assistant) {
-    return null;
-  }
-
-  return (
-    <section className="section assistant-section one-page-section" id="ask-val">
-      <div className="section__inner">
-        <Reveal className="assistant-panel">
-          <div className="assistant-panel__copy">
-            <p className="section-label">{assistant.label}</p>
-            <h2>
-              {assistant.title}
-              <span>.</span>
-            </h2>
-            <p>{assistant.copy}</p>
-            <div className="assistant-panel__signals" aria-label="Assistant build signals">
-              {assistant.signals.map((signal) => (
-                <span key={signal}>{signal}</span>
-              ))}
-            </div>
-          </div>
-
-          <PortfolioAssistant prompts={assistant.prompts} />
         </Reveal>
       </div>
     </section>
@@ -329,9 +298,6 @@ export function HomePage() {
               <ButtonLink to="#contact" variant="ghost">
                 Contact me
               </ButtonLink>
-              <ButtonLink to="#ask-val" variant="ghost">
-                Ask Val
-              </ButtonLink>
             </div>
             <HeroProof items={siteContent.profile.proof} />
           </Reveal>
@@ -365,8 +331,6 @@ export function HomePage() {
           </Reveal>
         </div>
       </section>
-
-      <AskValSection assistant={siteContent.assistant} />
 
       <TeamFitSection teamFit={siteContent.teamFit} />
 

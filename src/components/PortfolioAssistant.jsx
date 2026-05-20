@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { siteContent } from "../content/siteContent";
 
 const initialMessages = [
@@ -98,7 +98,7 @@ async function requestRemoteReply(question) {
   return data;
 }
 
-export function PortfolioAssistant({ prompts = [] }) {
+export function PortfolioAssistant({ prompts = [], className = "" }) {
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
   const [isThinking, setIsThinking] = useState(false);
@@ -144,7 +144,7 @@ export function PortfolioAssistant({ prompts = [] }) {
   }
 
   return (
-    <div className="portfolio-assistant" aria-label="Ask Val portfolio assistant">
+    <div className={["portfolio-assistant", className].filter(Boolean).join(" ")} aria-label="Ask Val portfolio assistant">
       <div className="portfolio-assistant__status">
         <span>portfolio assistant</span>
         <strong>{isThinking ? "thinking" : "ready"}</strong>
@@ -187,5 +187,60 @@ export function PortfolioAssistant({ prompts = [] }) {
         </div>
       </form>
     </div>
+  );
+}
+
+export function PortfolioAssistantWidget() {
+  const [isOpen, setIsOpen] = useState(false);
+  const prompts = siteContent.assistant?.prompts ?? [];
+
+  useEffect(() => {
+    const openFromHash = () => {
+      if (window.location.hash === "#ask-val") {
+        setIsOpen(true);
+      }
+    };
+
+    openFromHash();
+    window.addEventListener("hashchange", openFromHash);
+
+    return () => {
+      window.removeEventListener("hashchange", openFromHash);
+    };
+  }, []);
+
+  return (
+    <aside className={["assistant-widget", isOpen ? "is-open" : ""].filter(Boolean).join(" ")} id="ask-val">
+      <button
+        className="assistant-widget__launcher"
+        type="button"
+        aria-expanded={isOpen}
+        aria-controls="portfolio-assistant-window"
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <span>Ask Val</span>
+        <small>portfolio assistant</small>
+      </button>
+
+      {isOpen ? (
+        <section
+          className="assistant-widget__panel"
+          id="portfolio-assistant-window"
+          aria-label="Ask Val chat window"
+        >
+          <div className="assistant-widget__head">
+            <div>
+              <span>Ask Val</span>
+              <strong>portfolio assistant</strong>
+            </div>
+            <button type="button" aria-label="Close Ask Val" onClick={() => setIsOpen(false)}>
+              close
+            </button>
+          </div>
+
+          <PortfolioAssistant prompts={prompts} className="portfolio-assistant--widget" />
+        </section>
+      ) : null}
+    </aside>
   );
 }
