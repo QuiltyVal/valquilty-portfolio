@@ -1,0 +1,28 @@
+node_modules
+dist
+.DS_Store
+.claude/
+.qpanda/
+.env
+.env.*
+!.env.example
+.vercel
+
+# Local-only context and handoff material
+AGENTS.md
+PROJECT_CONTEXT.md
+Portfolio_Redesign_Spec.md
+Antrag_Stipendium.pdf
+chatgpt-pro-interface-handoff-2026-05-19/
+audit-for-chatgpt-pro/
+
+# Old projects, backups, rollbacks, and recovered builds
+ADHDplanner-app/
+ADHDplanner-working.bak/
+Adhdplanner-repo/
+adhd-planner-ops/
+prod-recovery/
+planner-rollbacks/
+archives/
+book/
+the-myth/
