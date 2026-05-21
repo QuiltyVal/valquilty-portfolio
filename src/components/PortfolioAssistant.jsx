@@ -166,7 +166,7 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
   const [isSendingContact, setIsSendingContact] = useState(false);
   const messagesEndRef = useRef(null);
 
-  const visiblePrompts = useMemo(() => prompts.slice(0, 4), [prompts]);
+  const visiblePrompts = useMemo(() => prompts.slice(0, 5), [prompts]);
 
   useEffect(() => {
     window.requestAnimationFrame(() => {

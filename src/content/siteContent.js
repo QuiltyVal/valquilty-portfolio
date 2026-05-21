@@ -40,6 +40,7 @@ export const siteContent = {
     copy:
       "A small assistant surface for recruiters and product teams: it answers from curated portfolio context about my role fit, ADHD Planner, product lab, and AI-assisted building practice.",
     prompts: [
+      "How can I contact Val?",
       "Why might Val fit a Product Owner role?",
       "What is ADHD Planner?",
       "What can Val build with AI tools?",
