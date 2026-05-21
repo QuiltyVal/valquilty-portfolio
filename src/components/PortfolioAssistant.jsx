@@ -189,7 +189,7 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
           role: "assistant",
           type: "contact",
           text:
-            "You can send Val a message directly from here. Leave your email and a short note; it will go to me@valquilty.com.",
+            "You can send Val a message directly from here. Leave your email and a short note; it will go to Val's inbox. You can also email me@valquilty.com directly.",
           source: "direct contact",
         },
       ]);
@@ -250,7 +250,7 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
         ...current,
         {
           role: "assistant",
-          text: "Sent. Val will receive your message at me@valquilty.com and can reply to the email you left.",
+          text: "Sent. Val will receive your message and can reply to the email you left.",
           source: "direct contact",
         },
       ]);

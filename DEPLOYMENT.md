@@ -22,6 +22,8 @@ PUBLIC_SITE_NAME=Val Quilty Portfolio
 PORT=3000
 ```
 
+With Resend's `onboarding@resend.dev`, delivery is limited to the verified Resend account email. Verify `valquilty.com` in Resend before sending from/to the public domain address.
+
 The OpenRouter model is selected from:
 
 ```txt
