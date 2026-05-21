@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { siteContent } from "../content/siteContent";
 
 const assistantPortrait = {
-  video: "/media/profile-note.mp4",
+  mp4: "/media/profile-note.mp4",
+  mov: "/media/profile-note.mov",
   poster: "/media/profile-note-poster.png",
 };
 
@@ -434,9 +435,10 @@ export function PortfolioAssistantWidget() {
                 muted
                 playsInline
                 poster={assistantPortrait.poster}
-                preload="metadata"
+                preload="auto"
               >
-                <source src={assistantPortrait.video} type="video/mp4" />
+                <source src={assistantPortrait.mp4} type="video/mp4" />
+                <source src={assistantPortrait.mov} type="video/quicktime" />
               </video>
             </div>
 
