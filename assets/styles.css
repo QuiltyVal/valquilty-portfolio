@@ -3344,7 +3344,8 @@ main {
   order: -1;
   pointer-events: auto;
   width: min(29rem, calc(100vw - 2rem));
-  max-height: min(43rem, calc(100vh - 7.2rem));
+  height: min(38rem, calc(100vh - 9rem));
+  min-height: 27rem;
   display: grid;
   grid-template-rows: auto minmax(0, 1fr);
   border: 1px solid rgba(var(--paper-rgb), 0.12);
@@ -3443,16 +3444,21 @@ main {
 }
 
 .portfolio-assistant--widget {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto auto;
+  min-height: 0;
   border: 0;
   border-left: 0;
   border-top: 0;
-  max-height: 100%;
   padding: 0.95rem;
   background: transparent;
+  overflow: hidden;
 }
 
 .portfolio-assistant--widget .portfolio-assistant__messages {
-  max-height: min(22rem, calc(100vh - 23rem));
+  min-height: 0;
+  max-height: none;
+  overscroll-behavior: contain;
 }
 
 .assistant-section {
@@ -4301,7 +4307,8 @@ html[data-theme="light"] .assistant-widget__head span {
 
   .assistant-widget__panel {
     width: 100%;
-    max-height: calc(100vh - 6.25rem);
+    height: calc(100dvh - 8.25rem);
+    min-height: 29rem;
   }
 
   .portfolio-assistant--widget {
