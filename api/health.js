@@ -10,5 +10,6 @@ export default async function handler(req, res) {
     ok: true,
     model: await getPreferredModel(),
     hasOpenRouterKey: Boolean(process.env.OPENROUTER_API_KEY),
+    hasResendKey: Boolean(process.env.RESEND_API_KEY),
   });
 }

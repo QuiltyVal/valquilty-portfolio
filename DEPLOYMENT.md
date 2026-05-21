@@ -6,6 +6,7 @@ For a standalone Node server, `server.js` serves `dist/` and exposes the same AP
 - `GET /api/health`
 - `POST /api/reading`
 - `POST /api/portfolio-chat`
+- `POST /api/contact-message`
 
 ## Environment
 
@@ -13,6 +14,9 @@ Set these on the server:
 
 ```bash
 OPENROUTER_API_KEY=sk-or-v1... # enables I Ching interpretation and portfolio AI chat
+RESEND_API_KEY=re_... # enables Ask Val direct contact delivery
+CONTACT_TO_EMAIL=me@valquilty.com
+CONTACT_FROM_EMAIL=Val Quilty Portfolio <onboarding@resend.dev>
 PUBLIC_SITE_URL=https://valquilty.com
 PUBLIC_SITE_NAME=Val Quilty Portfolio
 PORT=3000

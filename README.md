@@ -39,10 +39,12 @@ npm run preview
 ## API
 
 - `POST /api/portfolio-chat` - Ask Val portfolio assistant
+- `POST /api/contact-message` - send recruiter/contact messages to Val
 - `POST /api/reading` - Quantum I Ching reading
 - `GET /api/health` - model/key health check
 
 `OPENROUTER_API_KEY` enables live AI replies. Without it, the portfolio assistant and I Ching route keep working with curated/local fallback responses.
+`RESEND_API_KEY` enables direct message delivery from the Ask Val contact form.
 
 ## Content
 

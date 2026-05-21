@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { siteContent } from "../content/siteContent";
 
 const assistantPortrait = {
@@ -15,6 +15,13 @@ const initialMessages = [
   },
 ];
 
+const initialContactDraft = {
+  name: "",
+  email: "",
+  message: "",
+  company: "",
+};
+
 function normalizeText(value) {
   return String(value || "")
     .toLowerCase()
@@ -25,6 +32,37 @@ function normalizeText(value) {
 
 function hasAny(text, terms) {
   return terms.some((term) => text.includes(term));
+}
+
+function isContactIntent(question) {
+  const query = normalizeText(question);
+
+  return hasAny(query, [
+    "contact",
+    "email",
+    "hire",
+    "reach",
+    "talk",
+    "message",
+    "recruiter",
+    "connect",
+    "связ",
+    "контакт",
+    "почт",
+    "письм",
+    "напис",
+    "имейл",
+    "мейл",
+    "нанять",
+    "рекрутер",
+  ]);
+}
+
+function stripMarkdown(value) {
+  return String(value || "")
+    .replace(/\*\*/g, "")
+    .replace(/^\s*[-*]\s+/gm, "")
+    .trim();
 }
 
 function summarizeProject(project) {
@@ -103,12 +141,38 @@ async function requestRemoteReply(question) {
   return data;
 }
 
+async function requestContactMessage(payload) {
+  const response = await fetch("/api/contact-message", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+
+  const contentType = response.headers.get("content-type") || "";
+  const data = contentType.includes("application/json") ? await response.json() : null;
+
+  if (!response.ok || !data?.ok) {
+    throw new Error(data?.error || "Could not send the message.");
+  }
+
+  return data;
+}
+
 export function PortfolioAssistant({ prompts = [], className = "" }) {
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
+  const [contactDraft, setContactDraft] = useState(initialContactDraft);
   const [isThinking, setIsThinking] = useState(false);
+  const [isSendingContact, setIsSendingContact] = useState(false);
+  const messagesEndRef = useRef(null);
 
   const visiblePrompts = useMemo(() => prompts.slice(0, 4), [prompts]);
+
+  useEffect(() => {
+    window.requestAnimationFrame(() => {
+      messagesEndRef.current?.scrollIntoView({ block: "end", behavior: "smooth" });
+    });
+  }, [messages, isThinking]);
 
   async function submitQuestion(value) {
     const question = String(value || draft).trim();
@@ -117,6 +181,21 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
     const userMessage = { role: "user", text: question };
     setMessages((current) => [...current, userMessage]);
     setDraft("");
+
+    if (isContactIntent(question)) {
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          type: "contact",
+          text:
+            "You can send Val a message directly from here. Leave your email and a short note; it will go to me@valquilty.com.",
+          source: "direct contact",
+        },
+      ]);
+      return;
+    }
+
     setIsThinking(true);
 
     try {
@@ -125,7 +204,7 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
         ...current,
         {
           role: "assistant",
-          text: remote.reply,
+          text: stripMarkdown(remote.reply),
           source: remote.source || "portfolio model",
         },
       ]);
@@ -148,6 +227,51 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
     submitQuestion();
   }
 
+  function updateContactDraft(field, value) {
+    setContactDraft((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
+
+  async function handleContactSubmit(event) {
+    event.preventDefault();
+    if (isSendingContact) return;
+
+    setIsSendingContact(true);
+
+    try {
+      await requestContactMessage({
+        ...contactDraft,
+        pageUrl: window.location.href,
+      });
+
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          text: "Sent. Val will receive your message at me@valquilty.com and can reply to the email you left.",
+          source: "direct contact",
+        },
+      ]);
+      setContactDraft(initialContactDraft);
+    } catch (error) {
+      setMessages((current) => [
+        ...current,
+        {
+          role: "assistant",
+          text:
+            error.message === "Email delivery is not configured yet."
+              ? "Direct email delivery is not configured yet. For now, use me@valquilty.com."
+              : "I could not send that message right now. Please try again or email me@valquilty.com directly.",
+          source: "direct contact",
+        },
+      ]);
+    } finally {
+      setIsSendingContact(false);
+    }
+  }
+
   return (
     <div className={["portfolio-assistant", className].filter(Boolean).join(" ")} aria-label="Ask Val portfolio assistant">
       <div className="portfolio-assistant__status">
@@ -160,9 +284,59 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
           <article className={`assistant-message assistant-message--${message.role}`} key={`${message.role}-${index}`}>
             <span>{message.role === "assistant" ? "assistant" : "visitor"}</span>
             <p>{message.text}</p>
+            {message.type === "contact" ? (
+              <form className="assistant-contact-form" onSubmit={handleContactSubmit}>
+                <label>
+                  <span>Your name</span>
+                  <input
+                    type="text"
+                    value={contactDraft.name}
+                    onChange={(event) => updateContactDraft("name", event.target.value)}
+                    autoComplete="name"
+                    maxLength={120}
+                  />
+                </label>
+                <label>
+                  <span>Reply email</span>
+                  <input
+                    type="email"
+                    value={contactDraft.email}
+                    onChange={(event) => updateContactDraft("email", event.target.value)}
+                    autoComplete="email"
+                    required
+                    maxLength={180}
+                  />
+                </label>
+                <label className="assistant-contact-form__message">
+                  <span>Message</span>
+                  <textarea
+                    value={contactDraft.message}
+                    onChange={(event) => updateContactDraft("message", event.target.value)}
+                    required
+                    minLength={12}
+                    maxLength={1800}
+                    rows={4}
+                  />
+                </label>
+                <label className="assistant-contact-form__trap" aria-hidden="true">
+                  <span>Company</span>
+                  <input
+                    type="text"
+                    tabIndex={-1}
+                    value={contactDraft.company}
+                    onChange={(event) => updateContactDraft("company", event.target.value)}
+                    autoComplete="off"
+                  />
+                </label>
+                <button type="submit" disabled={isSendingContact || !contactDraft.email || contactDraft.message.length < 12}>
+                  {isSendingContact ? "sending" : "send to val"}
+                </button>
+              </form>
+            ) : null}
             {message.source ? <small>{message.source}</small> : null}
           </article>
         ))}
+        <div ref={messagesEndRef} aria-hidden="true" />
       </div>
 
       {visiblePrompts.length ? (
@@ -227,7 +401,7 @@ export function PortfolioAssistantWidget() {
           <span>Ask Val</span>
           <small>portfolio assistant</small>
         </span>
-        <span className="assistant-widget__launcher-portrait" aria-hidden="true" />
+        <span className="assistant-widget__launcher-eye" aria-hidden="true" />
       </button>
 
       {isOpen ? (

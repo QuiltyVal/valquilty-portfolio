@@ -11,12 +11,15 @@ const publicDir = path.join(__dirname, "dist");
 
 const PORT = Number.parseInt(process.env.PORT || "3000", 10);
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+const RESEND_URL = "https://api.resend.com/emails";
 const MODEL_SERVICE_URL =
   process.env.ORACLE_MODEL_SERVICE_URL || "https://shir-man.com/api/free-llm/top-models";
 const QRANDOM_URL = "https://qrandom.io/api/random/ints?min=0&max=1&n=18";
 const DEFAULT_MODEL = "openrouter/free";
 const MAX_BODY_BYTES = 16 * 1024;
 const MODEL_CACHE_TTL_MS = 10 * 60 * 1000;
+const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL || "me@valquilty.com";
+const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL || "Val Quilty Portfolio <onboarding@resend.dev>";
 
 const PORTFOLIO_CONTEXT = `
 Public name: Val Quilty.
@@ -192,6 +195,52 @@ function cleanQuestion(question) {
     .trim()
     .replace(/\s+/g, " ")
     .slice(0, 800);
+}
+
+function cleanField(value, maxLength) {
+  return String(value || "")
+    .trim()
+    .replace(/\s+/g, " ")
+    .slice(0, maxLength);
+}
+
+function cleanMessage(value) {
+  return String(value || "")
+    .trim()
+    .replace(/\r\n/g, "\n")
+    .replace(/\n{4,}/g, "\n\n\n")
+    .slice(0, 1800);
+}
+
+function isValidEmail(value) {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+function renderContactHtml({ name, email, message, pageUrl }) {
+  const safeName = escapeHtml(name || "Website visitor");
+  const safeEmail = escapeHtml(email);
+  const safePageUrl = escapeHtml(pageUrl || "https://valquilty.com/");
+  const safeMessage = escapeHtml(message).replace(/\n/g, "<br />");
+
+  return `
+    <div style="font-family: Georgia, serif; color: #2d241d; line-height: 1.5;">
+      <h1 style="font-size: 24px; font-weight: 400;">New portfolio message</h1>
+      <p><strong>From:</strong> ${safeName}</p>
+      <p><strong>Reply email:</strong> ${safeEmail}</p>
+      <p><strong>Page:</strong> ${safePageUrl}</p>
+      <hr style="border: 0; border-top: 1px solid #d8c8b8;" />
+      <p>${safeMessage}</p>
+    </div>
+  `;
 }
 
 function parseJsonFromModel(text) {
@@ -388,7 +437,7 @@ async function createPortfolioChatReply(question, modelInfo) {
       {
         role: "system",
         content:
-          "You are Ask Val, a concise portfolio assistant for recruiters and product teams. Answer only from the provided portfolio context. Be truthful and specific. Do not invent metrics, employers, degrees, seniority, or unavailable links. Make clear that Val is product-owner / junior-PM / AI-product-builder oriented, not a pure software engineer. If the user writes Russian, answer in Russian; otherwise answer in English.",
+          "You are Ask Val, a concise portfolio assistant for recruiters and product teams. Answer only from the provided portfolio context. Be truthful and specific. Do not invent metrics, employers, degrees, seniority, or unavailable links. Make clear that Val is product-owner / junior-PM / AI-product-builder oriented, not a pure software engineer. Use plain text only: no Markdown bold, no Markdown headings, and no long bullet lists. If the user writes Russian, answer in Russian; otherwise answer in English.",
       },
       {
         role: "user",
@@ -468,6 +517,84 @@ async function handlePortfolioChat(req, res) {
   }
 }
 
+async function handleContactMessage(req, res) {
+  try {
+    const body = await readJsonBody(req);
+    const honeypot = cleanField(body.company, 120);
+
+    if (honeypot) {
+      sendJson(res, 200, { ok: true });
+      return;
+    }
+
+    const name = cleanField(body.name, 120);
+    const email = cleanField(body.email, 180).toLowerCase();
+    const message = cleanMessage(body.message);
+    const pageUrl = cleanField(body.pageUrl, 260);
+
+    if (!isValidEmail(email)) {
+      sendJson(res, 400, { ok: false, error: "A valid reply email is required." });
+      return;
+    }
+
+    if (message.length < 12) {
+      sendJson(res, 400, { ok: false, error: "Message is too short." });
+      return;
+    }
+
+    if (!process.env.RESEND_API_KEY) {
+      sendJson(res, 503, {
+        ok: false,
+        code: "email-not-configured",
+        error: "Email delivery is not configured yet.",
+        fallbackEmail: CONTACT_TO_EMAIL,
+      });
+      return;
+    }
+
+    const subjectName = name || email;
+    const text = [
+      "New portfolio message",
+      "",
+      `From: ${subjectName}`,
+      `Reply email: ${email}`,
+      `Page: ${pageUrl || "https://valquilty.com/"}`,
+      "",
+      message,
+    ].join("\n");
+
+    const data = await fetchJson(
+      RESEND_URL,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: CONTACT_FROM_EMAIL,
+          to: CONTACT_TO_EMAIL,
+          reply_to: email,
+          subject: `Portfolio contact: ${subjectName}`,
+          text,
+          html: renderContactHtml({ name, email, message, pageUrl }),
+        }),
+      },
+      Number.parseInt(process.env.RESEND_TIMEOUT_MS || "12000", 10)
+    );
+
+    sendJson(res, 200, {
+      ok: true,
+      id: data?.id || data?.data?.id || null,
+    });
+  } catch {
+    sendJson(res, 502, {
+      ok: false,
+      error: "Could not send the message right now.",
+    });
+  }
+}
+
 async function handleReading(req, res) {
   try {
     const body = await readJsonBody(req);
@@ -533,6 +660,7 @@ const server = createServer(async (req, res) => {
       ok: true,
       model: await getPreferredModel(),
       hasOpenRouterKey: Boolean(process.env.OPENROUTER_API_KEY),
+      hasResendKey: Boolean(process.env.RESEND_API_KEY),
     });
     return;
   }
@@ -544,6 +672,11 @@ const server = createServer(async (req, res) => {
 
   if (req.method === "POST" && req.url === "/api/portfolio-chat") {
     await handlePortfolioChat(req, res);
+    return;
+  }
+
+  if (req.method === "POST" && req.url === "/api/contact-message") {
+    await handleContactMessage(req, res);
     return;
   }
 

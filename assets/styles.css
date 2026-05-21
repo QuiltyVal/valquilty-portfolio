@@ -3282,7 +3282,7 @@ main {
 
 .assistant-widget__launcher {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 1.95rem;
+  grid-template-columns: minmax(0, 1fr) 2.15rem;
   align-items: center;
   gap: 0.72rem;
   min-width: 12.8rem;
@@ -3328,16 +3328,40 @@ main {
   letter-spacing: 0.06em;
 }
 
-.assistant-widget__launcher-portrait {
-  width: 1.95rem;
-  aspect-ratio: 9 / 16;
-  border: 1px solid rgba(var(--paper-rgb), 0.13);
-  border-bottom-color: rgba(var(--accent-rgb), 0.42);
+.assistant-widget__launcher-eye {
+  position: relative;
+  width: 2.15rem;
+  aspect-ratio: 1;
+  border: 1px solid rgba(255, 247, 234, 0.14);
+  border-radius: 50%;
   background:
-    linear-gradient(180deg, transparent 0 55%, rgba(0, 0, 0, 0.44)),
-    url("/media/profile-note-poster.png") center center / cover;
-  filter: saturate(0.82) contrast(1.05);
+    radial-gradient(circle at 38% 34%, rgba(255, 245, 220, 0.96) 0 4%, transparent 5%),
+    radial-gradient(circle at 48% 48%, rgba(255, 72, 62, 0.98) 0 18%, rgba(148, 0, 0, 0.92) 32%, rgba(28, 0, 0, 0.92) 56%, rgba(4, 4, 4, 0.96) 72%),
+    radial-gradient(circle at 50% 50%, rgba(255, 0, 0, 0.26), transparent 62%);
+  box-shadow:
+    0 0 0 1px rgba(255, 30, 24, 0.12),
+    0 0 18px rgba(255, 24, 18, 0.38),
+    inset 0 0 9px rgba(255, 232, 210, 0.18),
+    inset 0 0 18px rgba(0, 0, 0, 0.72);
+}
+
+.assistant-widget__launcher-eye::before {
+  content: "";
+  position: absolute;
+  inset: 0.34rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 64, 54, 0.88), rgba(88, 0, 0, 0.44) 58%, transparent 70%);
+  filter: blur(2px);
+}
+
+.assistant-widget__launcher-eye::after {
+  content: "";
+  position: absolute;
+  inset: -0.4rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 24, 18, 0.18), transparent 64%);
   opacity: 0.78;
+  pointer-events: none;
 }
 
 .assistant-widget__panel {
@@ -3608,6 +3632,7 @@ main {
   font-size: 0.95rem;
   line-height: 1.55;
   overflow-wrap: anywhere;
+  white-space: pre-wrap;
 }
 
 .assistant-message small {
@@ -3618,6 +3643,86 @@ main {
   font-size: 0.52rem;
   letter-spacing: 0.08em;
   text-transform: lowercase;
+}
+
+.assistant-contact-form {
+  display: grid;
+  gap: 0.62rem;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+  border-top: 1px solid rgba(var(--paper-rgb), 0.08);
+}
+
+.assistant-contact-form label {
+  display: grid;
+  gap: 0.28rem;
+}
+
+.assistant-contact-form label span {
+  color: rgba(var(--paper-rgb), 0.42);
+  font-size: 0.5rem;
+  letter-spacing: 0.1em;
+}
+
+.assistant-contact-form input,
+.assistant-contact-form textarea {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--paper-rgb), 0.12);
+  background: rgba(var(--paper-rgb), 0.035);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  outline: none;
+}
+
+.assistant-contact-form input {
+  min-height: 2.2rem;
+  padding: 0.5rem 0.58rem;
+}
+
+.assistant-contact-form textarea {
+  min-height: 5.6rem;
+  resize: vertical;
+  padding: 0.58rem;
+  line-height: 1.45;
+}
+
+.assistant-contact-form input:focus,
+.assistant-contact-form textarea:focus {
+  border-bottom-color: rgba(var(--accent-rgb), 0.58);
+  box-shadow: 0 0 0 1px rgba(var(--accent-rgb), 0.12);
+}
+
+.assistant-contact-form__trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.assistant-contact-form button {
+  justify-self: start;
+  min-height: 2.35rem;
+  padding: 0.58rem 0.72rem;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.58);
+  background:
+    linear-gradient(90deg, rgba(var(--accent-rgb), 0.18), transparent 75%),
+    rgba(var(--paper-rgb), 0.04);
+  color: rgba(255, 247, 234, 0.9);
+  font-family: var(--font-mono);
+  font-size: 0.56rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.assistant-contact-form button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 .portfolio-assistant__prompts {
@@ -4168,6 +4273,17 @@ html[data-theme="light"] .assistant-message--user {
     rgba(255, 252, 245, 0.56);
 }
 
+html[data-theme="light"] .assistant-contact-form input,
+html[data-theme="light"] .assistant-contact-form textarea {
+  background: rgba(255, 252, 245, 0.52);
+  color: rgba(45, 36, 29, 0.9);
+  border-bottom-color: rgba(45, 36, 29, 0.12);
+}
+
+html[data-theme="light"] .assistant-contact-form button {
+  color: rgba(45, 36, 29, 0.92);
+}
+
 html[data-theme="light"] .portfolio-assistant__form input {
   background: rgba(255, 252, 245, 0.42);
 }
@@ -4186,7 +4302,6 @@ html[data-theme="light"] .assistant-widget__launcher {
     inset 0 0 24px rgba(255, 255, 255, 0.28);
 }
 
-html[data-theme="light"] .assistant-widget__launcher-portrait,
 html[data-theme="light"] .assistant-widget__portrait {
   border-color: rgba(45, 36, 29, 0.13);
   border-left-color: rgba(var(--accent-rgb), 0.5);
