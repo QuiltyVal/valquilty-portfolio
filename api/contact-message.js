@@ -75,7 +75,7 @@ export default async function handler(req, res) {
       return;
     }
 
-    if (message.length < 12) {
+    if (message.length < 4) {
       sendJson(res, 400, { ok: false, error: "Message is too short." });
       return;
     }
@@ -126,6 +126,7 @@ export default async function handler(req, res) {
       id: data?.id || data?.data?.id || null,
     });
   } catch (error) {
+    console.error("contact-message failed:", error.message);
     sendJson(res, error.statusCode || 502, {
       ok: false,
       error: "Could not send the message right now.",

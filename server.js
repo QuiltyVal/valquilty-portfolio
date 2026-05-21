@@ -537,7 +537,7 @@ async function handleContactMessage(req, res) {
       return;
     }
 
-    if (message.length < 12) {
+    if (message.length < 4) {
       sendJson(res, 400, { ok: false, error: "Message is too short." });
       return;
     }
@@ -587,7 +587,8 @@ async function handleContactMessage(req, res) {
       ok: true,
       id: data?.id || data?.data?.id || null,
     });
-  } catch {
+  } catch (error) {
+    console.error("contact-message failed:", error.message);
     sendJson(res, 502, {
       ok: false,
       error: "Could not send the message right now.",

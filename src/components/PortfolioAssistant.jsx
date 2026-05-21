@@ -162,11 +162,13 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState("");
   const [contactDraft, setContactDraft] = useState(initialContactDraft);
+  const [isContactMode, setIsContactMode] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [isSendingContact, setIsSendingContact] = useState(false);
   const messagesEndRef = useRef(null);
 
   const visiblePrompts = useMemo(() => prompts.slice(0, 5), [prompts]);
+  const shouldShowPrompts = visiblePrompts.length > 0 && messages.length === initialMessages.length && !isContactMode;
 
   useEffect(() => {
     window.requestAnimationFrame(() => {
@@ -183,13 +185,13 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
     setDraft("");
 
     if (isContactIntent(question)) {
+      setIsContactMode(true);
       setMessages((current) => [
         ...current,
         {
           role: "assistant",
-          type: "contact",
           text:
-            "You can send Val a message directly from here. Leave your email and a short note; it will go to Val's inbox. You can also email me@valquilty.com directly.",
+            "You can send Val a message directly from here. Leave your email and a short note in the contact form below. You can also email me@valquilty.com directly.",
           source: "direct contact",
         },
       ]);
@@ -255,6 +257,7 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
         },
       ]);
       setContactDraft(initialContactDraft);
+      setIsContactMode(false);
     } catch (error) {
       setMessages((current) => [
         ...current,
@@ -272,6 +275,11 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
     }
   }
 
+  function closeContactMode() {
+    setIsContactMode(false);
+    setContactDraft(initialContactDraft);
+  }
+
   return (
     <div className={["portfolio-assistant", className].filter(Boolean).join(" ")} aria-label="Ask Val portfolio assistant">
       <div className="portfolio-assistant__status">
@@ -284,62 +292,13 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
           <article className={`assistant-message assistant-message--${message.role}`} key={`${message.role}-${index}`}>
             <span>{message.role === "assistant" ? "assistant" : "visitor"}</span>
             <p>{message.text}</p>
-            {message.type === "contact" ? (
-              <form className="assistant-contact-form" onSubmit={handleContactSubmit}>
-                <label>
-                  <span>Your name</span>
-                  <input
-                    type="text"
-                    value={contactDraft.name}
-                    onChange={(event) => updateContactDraft("name", event.target.value)}
-                    autoComplete="name"
-                    maxLength={120}
-                  />
-                </label>
-                <label>
-                  <span>Reply email</span>
-                  <input
-                    type="email"
-                    value={contactDraft.email}
-                    onChange={(event) => updateContactDraft("email", event.target.value)}
-                    autoComplete="email"
-                    required
-                    maxLength={180}
-                  />
-                </label>
-                <label className="assistant-contact-form__message">
-                  <span>Message</span>
-                  <textarea
-                    value={contactDraft.message}
-                    onChange={(event) => updateContactDraft("message", event.target.value)}
-                    required
-                    minLength={12}
-                    maxLength={1800}
-                    rows={4}
-                  />
-                </label>
-                <label className="assistant-contact-form__trap" aria-hidden="true">
-                  <span>Company</span>
-                  <input
-                    type="text"
-                    tabIndex={-1}
-                    value={contactDraft.company}
-                    onChange={(event) => updateContactDraft("company", event.target.value)}
-                    autoComplete="off"
-                  />
-                </label>
-                <button type="submit" disabled={isSendingContact || !contactDraft.email || contactDraft.message.length < 12}>
-                  {isSendingContact ? "sending" : "send to val"}
-                </button>
-              </form>
-            ) : null}
             {message.source ? <small>{message.source}</small> : null}
           </article>
         ))}
         <div ref={messagesEndRef} aria-hidden="true" />
       </div>
 
-      {visiblePrompts.length ? (
+      {shouldShowPrompts ? (
         <div className="portfolio-assistant__prompts" aria-label="Suggested questions">
           {visiblePrompts.map((prompt) => (
             <button type="button" key={prompt} onClick={() => submitQuestion(prompt)} disabled={isThinking}>
@@ -349,22 +308,78 @@ export function PortfolioAssistant({ prompts = [], className = "" }) {
         </div>
       ) : null}
 
-      <form className="portfolio-assistant__form" onSubmit={handleSubmit}>
-        <label htmlFor="portfolio-assistant-question">Ask a question</label>
-        <div>
-          <input
-            id="portfolio-assistant-question"
-            type="text"
-            value={draft}
-            onChange={(event) => setDraft(event.target.value)}
-            placeholder="Ask about Val's role fit, ADHD Planner, or AI prototypes"
-            maxLength={420}
-          />
-          <button type="submit" disabled={isThinking || !draft.trim()}>
-            Send
+      {isContactMode ? (
+        <form className="assistant-contact-form assistant-contact-form--dock" onSubmit={handleContactSubmit}>
+          <div className="assistant-contact-form__head">
+            <span>send a message</span>
+            <button type="button" onClick={closeContactMode}>
+              back to chat
+            </button>
+          </div>
+          <label>
+            <span>Your name</span>
+            <input
+              type="text"
+              value={contactDraft.name}
+              onChange={(event) => updateContactDraft("name", event.target.value)}
+              autoComplete="name"
+              maxLength={120}
+            />
+          </label>
+          <label>
+            <span>Reply email</span>
+            <input
+              type="email"
+              value={contactDraft.email}
+              onChange={(event) => updateContactDraft("email", event.target.value)}
+              autoComplete="email"
+              required
+              maxLength={180}
+            />
+          </label>
+          <label className="assistant-contact-form__message">
+            <span>Message</span>
+            <textarea
+              value={contactDraft.message}
+              onChange={(event) => updateContactDraft("message", event.target.value)}
+              required
+              minLength={4}
+              maxLength={1800}
+              rows={3}
+            />
+          </label>
+          <label className="assistant-contact-form__trap" aria-hidden="true">
+            <span>Company</span>
+            <input
+              type="text"
+              tabIndex={-1}
+              value={contactDraft.company}
+              onChange={(event) => updateContactDraft("company", event.target.value)}
+              autoComplete="off"
+            />
+          </label>
+          <button type="submit" disabled={isSendingContact || !contactDraft.email || contactDraft.message.length < 4}>
+            {isSendingContact ? "sending" : "send to val"}
           </button>
-        </div>
-      </form>
+        </form>
+      ) : (
+        <form className="portfolio-assistant__form" onSubmit={handleSubmit}>
+          <label htmlFor="portfolio-assistant-question">Ask a question</label>
+          <div>
+            <input
+              id="portfolio-assistant-question"
+              type="text"
+              value={draft}
+              onChange={(event) => setDraft(event.target.value)}
+              placeholder="Ask about Val's role fit, ADHD Planner, or AI prototypes"
+              maxLength={420}
+            />
+            <button type="submit" disabled={isThinking || !draft.trim()}>
+              Send
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 }

@@ -3699,6 +3699,41 @@ main {
   border-top: 1px solid rgba(var(--paper-rgb), 0.08);
 }
 
+.assistant-contact-form--dock {
+  min-height: 0;
+  margin-top: 0.85rem;
+  padding-top: 0.85rem;
+}
+
+.assistant-contact-form__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.1rem;
+}
+
+.assistant-contact-form__head > span {
+  color: rgba(var(--signal-rgb), 0.82);
+  font-family: var(--font-mono);
+  font-size: 0.54rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: lowercase;
+}
+
+.assistant-contact-form__head button {
+  border: 0;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.42);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
 .assistant-contact-form label {
   display: grid;
   gap: 0.28rem;
@@ -3729,7 +3764,7 @@ main {
 }
 
 .assistant-contact-form textarea {
-  min-height: 5.6rem;
+  min-height: 4.8rem;
   resize: vertical;
   padding: 0.58rem;
   line-height: 1.45;
@@ -4328,6 +4363,10 @@ html[data-theme="light"] .assistant-contact-form textarea {
 
 html[data-theme="light"] .assistant-contact-form button {
   color: rgba(45, 36, 29, 0.92);
+}
+
+html[data-theme="light"] .assistant-contact-form__head button {
+  color: rgba(45, 36, 29, 0.62);
 }
 
 html[data-theme="light"] .portfolio-assistant__form input {
