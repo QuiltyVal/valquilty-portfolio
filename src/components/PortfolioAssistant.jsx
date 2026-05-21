@@ -393,6 +393,7 @@ export function PortfolioAssistantWidget() {
       <button
         className="assistant-widget__launcher"
         type="button"
+        aria-label="Ask Val portfolio assistant"
         aria-expanded={isOpen}
         aria-controls="portfolio-assistant-window"
         onClick={() => setIsOpen((open) => !open)}
