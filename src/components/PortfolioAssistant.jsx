@@ -1,6 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { siteContent } from "../content/siteContent";
 
+const assistantPortrait = {
+  video: "/media/profile-note.mp4",
+  poster: "/media/profile-note-poster.png",
+};
+
 const initialMessages = [
   {
     role: "assistant",
@@ -218,8 +223,11 @@ export function PortfolioAssistantWidget() {
         aria-controls="portfolio-assistant-window"
         onClick={() => setIsOpen((open) => !open)}
       >
-        <span>Ask Val</span>
-        <small>portfolio assistant</small>
+        <span className="assistant-widget__launcher-copy">
+          <span>Ask Val</span>
+          <small>portfolio assistant</small>
+        </span>
+        <span className="assistant-widget__launcher-portrait" aria-hidden="true" />
       </button>
 
       {isOpen ? (
@@ -229,7 +237,20 @@ export function PortfolioAssistantWidget() {
           aria-label="Ask Val chat window"
         >
           <div className="assistant-widget__head">
-            <div>
+            <div className="assistant-widget__portrait" aria-hidden="true">
+              <video
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster={assistantPortrait.poster}
+                preload="metadata"
+              >
+                <source src={assistantPortrait.video} type="video/mp4" />
+              </video>
+            </div>
+
+            <div className="assistant-widget__title">
               <span>Ask Val</span>
               <strong>portfolio assistant</strong>
             </div>
