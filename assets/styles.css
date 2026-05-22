@@ -3003,6 +3003,53 @@ main {
 .home-hero {
   min-height: auto;
   padding: 6.2rem 0 5.2rem;
+  isolation: isolate;
+}
+
+.home-hero::before,
+.home-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.home-hero::before {
+  background:
+    linear-gradient(90deg, rgba(4, 5, 6, 0.97) 0%, rgba(4, 5, 6, 0.78) 45%, rgba(4, 5, 6, 0.52) 100%),
+    linear-gradient(118deg, transparent 0 47%, rgba(var(--signal-rgb), 0.2) 47% 49%, transparent 49% 100%),
+    linear-gradient(146deg, transparent 0 56%, rgba(var(--accent-rgb), 0.18) 56% 57.2%, transparent 57.2% 100%),
+    radial-gradient(ellipse at 76% 34%, rgba(var(--signal-rgb), 0.24), transparent 38%),
+    radial-gradient(ellipse at 21% 76%, rgba(var(--accent-rgb), 0.18), transparent 44%),
+    linear-gradient(180deg, rgba(var(--paper-rgb), 0.035), transparent 28%, rgba(4, 5, 6, 0.64));
+}
+
+.home-hero::after {
+  inset: -14% -8%;
+  background:
+    repeating-linear-gradient(104deg, transparent 0 48px, rgba(var(--paper-rgb), 0.078) 48px 49px, transparent 49px 118px),
+    repeating-linear-gradient(12deg, transparent 0 72px, rgba(var(--signal-rgb), 0.06) 72px 73px, transparent 73px 154px),
+    linear-gradient(125deg, transparent 0 34%, rgba(var(--accent-rgb), 0.1) 34% 34.35%, transparent 34.7% 100%),
+    linear-gradient(63deg, transparent 0 58%, rgba(var(--signal-rgb), 0.08) 58% 58.4%, transparent 58.8% 100%);
+  background-size: 19rem 19rem, 24rem 24rem, 100% 100%, 100% 100%;
+  opacity: 1;
+  transform: rotate(-1.8deg);
+  transform-origin: center;
+  animation: hero-field-drift 26s ease-in-out infinite alternate;
+  will-change: background-position, transform;
+}
+
+@keyframes hero-field-drift {
+  from {
+    background-position: 0 0, 0 0, center, center;
+    transform: translate3d(-1.2rem, -0.55rem, 0) rotate(-1.8deg) scale(1.02);
+  }
+
+  to {
+    background-position: 4.8rem -2.8rem, -3.2rem 4rem, center, center;
+    transform: translate3d(1rem, 0.75rem, 0) rotate(-0.7deg) scale(1.04);
+  }
 }
 
 .home-hero__inner {
@@ -3238,7 +3285,7 @@ main {
 }
 
 .team-fit-item {
-  padding: var(--space-3) 0 0;
+  padding: clamp(1.05rem, 1.55vw, 1.35rem) clamp(1.25rem, 2vw, 1.8rem);
   border: 0;
   border-top: 1px solid rgba(var(--paper-rgb), 0.1);
   background: transparent;
@@ -4338,6 +4385,26 @@ html[data-theme="light"] .home-hero__panel {
   box-shadow: none;
 }
 
+html[data-theme="light"] .home-hero::before {
+  background:
+    linear-gradient(90deg, rgba(248, 241, 229, 0.96) 0%, rgba(248, 241, 229, 0.78) 45%, rgba(248, 241, 229, 0.54) 100%),
+    linear-gradient(118deg, transparent 0 47%, rgba(var(--signal-rgb), 0.16) 47% 49%, transparent 49% 100%),
+    linear-gradient(146deg, transparent 0 56%, rgba(var(--accent-rgb), 0.17) 56% 57.2%, transparent 57.2% 100%),
+    radial-gradient(ellipse at 76% 34%, rgba(var(--signal-rgb), 0.16), transparent 38%),
+    radial-gradient(ellipse at 21% 76%, rgba(var(--accent-rgb), 0.16), transparent 44%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.36), transparent 28%, rgba(235, 223, 207, 0.62));
+}
+
+html[data-theme="light"] .home-hero::after {
+  background:
+    repeating-linear-gradient(104deg, transparent 0 48px, rgba(45, 36, 29, 0.082) 48px 49px, transparent 49px 118px),
+    repeating-linear-gradient(12deg, transparent 0 72px, rgba(var(--signal-rgb), 0.074) 72px 73px, transparent 73px 154px),
+    linear-gradient(125deg, transparent 0 34%, rgba(var(--accent-rgb), 0.085) 34% 34.35%, transparent 34.7% 100%),
+    linear-gradient(63deg, transparent 0 58%, rgba(var(--signal-rgb), 0.075) 58% 58.4%, transparent 58.8% 100%);
+  background-size: 19rem 19rem, 24rem 24rem, 100% 100%, 100% 100%;
+  opacity: 0.98;
+}
+
 html[data-theme="light"] .home-hero__panel-list strong {
   color: rgba(45, 36, 29, 0.92);
 }
@@ -4453,6 +4520,11 @@ html[data-theme="light"] .assistant-widget__head span {
 
   .home-hero {
     padding: 3.2rem 0 4rem;
+  }
+
+  .home-hero::after {
+    inset: -8%;
+    opacity: 0.52;
   }
 
   .home-hero__copy h1 {
@@ -4630,5 +4702,10 @@ html[data-theme="light"] .assistant-widget__head span {
   .has-motion .reveal.is-visible {
     opacity: 1;
     transform: none;
+  }
+
+  html[data-hero-motion="on"] .home-hero::after {
+    animation-duration: 26s !important;
+    animation-iteration-count: infinite !important;
   }
 }
