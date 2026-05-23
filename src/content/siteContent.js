@@ -154,6 +154,18 @@ export const siteContent = {
       actions: [{ label: "open dashboard", href: "https://jobs.valquilty.com/" }],
       featured: true,
       heroSlot: "jobs",
+      walkthrough: {
+        planned: true,
+        placeholderTitle: "job-search workflow recording",
+        placeholderCopy:
+          "A short recording should show how vacancies move through the dashboard from source link to status, CV variant, follow-up, and decision.",
+        show: [
+          "vacancy capture and source tracking",
+          "application status pipeline",
+          "CV / cover-letter variants",
+          "daily action and decision flow",
+        ],
+      },
     },
     {
       id: "i-ching",
@@ -184,6 +196,18 @@ export const siteContent = {
       actions: [{ label: "open Dzyn", href: "https://i-ching.valquilty.com/en/i-ching" }],
       featured: true,
       heroSlot: "oracle",
+      walkthrough: {
+        planned: true,
+        placeholderTitle: "AI UX / randomness recording",
+        placeholderCopy:
+          "A short recording should show the random input, text assembly, API response, and how the interface frames uncertainty as a product interaction.",
+        show: [
+          "random source as interface input",
+          "AI-assisted text assembly",
+          "API orchestration and response flow",
+          "design-system and interaction checks",
+        ],
+      },
     },
     {
       id: "dossier",
@@ -211,6 +235,18 @@ export const siteContent = {
       actions: [{ label: "open dossier", href: "http://dossier.valquilty.com/" }],
       featured: true,
       heroSlot: "dossier",
+      walkthrough: {
+        planned: true,
+        placeholderTitle: "personal tooling recording",
+        placeholderCopy:
+          "A short recording should show food logging, daily feedback, macro visibility, and the privacy-first local-AI hypothesis around sensitive personal data.",
+        show: [
+          "quick food logging",
+          "daily nutrition feedback",
+          "macro view and personal tuning",
+          "local-model privacy hypothesis",
+        ],
+      },
     },
     {
       id: "creative-generator",
@@ -236,6 +272,18 @@ export const siteContent = {
       ],
       actions: [{ label: "private prototype", disabled: true }],
       featured: false,
+      walkthrough: {
+        planned: true,
+        placeholderTitle: "private creative workflow recording",
+        placeholderCopy:
+          "A short recording should show reference analysis, company asset input, brand constraints, and generated ad-concept variants without exposing private material.",
+        show: [
+          "reference creative analysis",
+          "company asset input",
+          "brand constraint prompt flow",
+          "generated concept variants",
+        ],
+      },
     },
   ],
   featuredCaseStudy: {

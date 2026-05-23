@@ -420,18 +420,19 @@ button {
 }
 
 .button--ghost {
-  background: transparent;
+  background:
+    linear-gradient(90deg, rgba(var(--paper-rgb), 0.035), transparent 72%),
+    rgba(5, 6, 6, 0.22);
   color: var(--color-primary);
-  box-shadow: none;
-  border: 0;
-  border-bottom: 1px solid currentColor;
-  padding-left: 0;
-  padding-right: 0;
-  min-height: auto;
+  box-shadow:
+    inset 0 0 22px rgba(0, 0, 0, 0.14),
+    0 0 18px rgba(var(--accent-rgb), 0.045);
 }
 
 .button--ghost:hover {
-  background: transparent;
+  background:
+    linear-gradient(90deg, rgba(var(--accent-rgb), 0.18), transparent 72%),
+    rgba(255, 255, 255, 0.02);
   color: rgba(255, 247, 234, 0.92);
   transform: translateX(0.14rem);
 }
@@ -4000,6 +4001,10 @@ main {
   overflow: hidden;
 }
 
+.planner-case__preview--video {
+  aspect-ratio: 960 / 676;
+}
+
 .planner-case__preview img,
 .planner-case__preview video {
   width: 100%;
@@ -4011,6 +4016,8 @@ main {
 }
 
 .planner-case__preview video {
+  height: 100%;
+  object-fit: contain;
   background: #020303;
 }
 
@@ -4222,7 +4229,194 @@ main {
 }
 
 .project-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   padding-top: var(--space-3);
+}
+
+body.project-drawer-open {
+  overflow: hidden;
+}
+
+.project-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 130;
+  display: grid;
+  justify-items: end;
+  pointer-events: none;
+}
+
+.project-drawer__backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background:
+    linear-gradient(90deg, rgba(4, 5, 6, 0.24), rgba(4, 5, 6, 0.64)),
+    rgba(4, 5, 6, 0.28);
+  pointer-events: auto;
+}
+
+.project-drawer__panel {
+  position: relative;
+  z-index: 1;
+  width: min(45rem, calc(100vw - 1.2rem));
+  height: 100dvh;
+  display: grid;
+  gap: var(--space-4);
+  padding: clamp(1rem, 2.6vw, 2rem);
+  overflow-y: auto;
+  border-left: 1px solid rgba(var(--accent-rgb), 0.48);
+  background:
+    linear-gradient(135deg, rgba(var(--accent-rgb), 0.12), transparent 42%),
+    linear-gradient(180deg, rgba(7, 8, 8, 0.97), rgba(4, 5, 6, 0.94));
+  box-shadow:
+    -28px 0 80px rgba(0, 0, 0, 0.38),
+    inset 0 0 36px rgba(var(--paper-rgb), 0.018);
+  pointer-events: auto;
+}
+
+.project-drawer__head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  padding-bottom: var(--space-3);
+  border-bottom: 1px solid rgba(var(--paper-rgb), 0.1);
+}
+
+.project-drawer__head h3 {
+  margin: 0.4rem 0 0;
+  color: rgba(255, 247, 234, 0.96);
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 0.96;
+}
+
+.project-drawer__head button {
+  cursor: pointer;
+  border: 0;
+  border-bottom: 1px solid rgba(var(--accent-rgb), 0.42);
+  background: transparent;
+  color: var(--color-text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  font-weight: 760;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+}
+
+.project-drawer__head button:hover {
+  color: var(--color-text);
+  border-bottom-color: rgba(var(--accent-rgb), 0.72);
+}
+
+.project-drawer__media {
+  min-height: 18rem;
+  border: 1px solid rgba(var(--paper-rgb), 0.1);
+  background:
+    linear-gradient(135deg, rgba(var(--signal-rgb), 0.09), transparent 54%),
+    rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+}
+
+.project-drawer__media video {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: top center;
+  background: #020303;
+}
+
+.project-drawer__placeholder {
+  min-height: 18rem;
+  display: grid;
+  align-content: center;
+  gap: 0.7rem;
+  padding: var(--space-4);
+}
+
+.project-drawer__placeholder span,
+.project-drawer__details dt {
+  color: rgba(var(--accent-rgb), 0.88);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 760;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+}
+
+.project-drawer__placeholder p {
+  max-width: 30rem;
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: 1.08rem;
+}
+
+.project-drawer__plan {
+  padding: var(--space-3);
+  border: 1px solid rgba(var(--paper-rgb), 0.08);
+  background: rgba(var(--signal-rgb), 0.035);
+}
+
+.project-drawer__plan span {
+  color: rgba(var(--accent-rgb), 0.88);
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 760;
+  letter-spacing: 0.16em;
+  text-transform: lowercase;
+}
+
+.project-drawer__plan ul {
+  display: grid;
+  gap: 0.45rem;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.project-drawer__plan li {
+  color: var(--color-text-muted);
+  line-height: 1.45;
+}
+
+.project-drawer__plan li::before {
+  content: "/";
+  margin-right: 0.45rem;
+  color: rgba(var(--accent-rgb), 0.72);
+}
+
+.project-drawer__details {
+  display: grid;
+  gap: 0;
+  margin: 0;
+}
+
+.project-drawer__details div {
+  display: grid;
+  grid-template-columns: 7.5rem minmax(0, 1fr);
+  gap: var(--space-3);
+  padding: var(--space-3) 0;
+  border-top: 1px solid rgba(var(--paper-rgb), 0.08);
+}
+
+.project-drawer__details dd {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.5;
+}
+
+.project-drawer__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding-top: var(--space-3);
+  border-top: 1px solid rgba(var(--paper-rgb), 0.1);
 }
 
 .competency-card__items {
@@ -4345,6 +4539,46 @@ html[data-theme="light"] .competency-card {
     linear-gradient(180deg, rgba(255, 252, 245, 0.48), rgba(235, 223, 207, 0.18));
   border-color: rgba(45, 36, 29, 0.12);
   box-shadow: none;
+}
+
+html[data-theme="light"] .project-drawer__backdrop {
+  background:
+    linear-gradient(90deg, rgba(248, 241, 229, 0.2), rgba(68, 46, 28, 0.28)),
+    rgba(248, 241, 229, 0.36);
+}
+
+html[data-theme="light"] .project-drawer__panel {
+  background:
+    linear-gradient(135deg, rgba(var(--accent-rgb), 0.1), transparent 42%),
+    linear-gradient(180deg, rgba(255, 252, 245, 0.98), rgba(242, 232, 219, 0.95));
+  box-shadow:
+    -24px 0 70px rgba(68, 46, 28, 0.16),
+    inset 0 0 34px rgba(255, 255, 255, 0.28);
+}
+
+html[data-theme="light"] .project-drawer__head h3 {
+  color: rgba(45, 36, 29, 0.94);
+}
+
+html[data-theme="light"] .project-drawer__head button {
+  color: rgba(45, 36, 29, 0.62);
+}
+
+html[data-theme="light"] .project-drawer__media {
+  background:
+    linear-gradient(135deg, rgba(var(--signal-rgb), 0.08), transparent 54%),
+    rgba(255, 252, 245, 0.42);
+}
+
+html[data-theme="light"] .project-drawer__plan {
+  border-color: rgba(45, 36, 29, 0.08);
+  background: rgba(var(--signal-rgb), 0.045);
+}
+
+html[data-theme="light"] .project-drawer__details dd,
+html[data-theme="light"] .project-drawer__placeholder p,
+html[data-theme="light"] .project-drawer__plan li {
+  color: var(--color-text-muted);
 }
 
 html[data-theme="light"] .planner-case {
@@ -4680,6 +4914,21 @@ html[data-theme="light"] .assistant-widget__head span {
   .project-card__evidence div {
     grid-template-columns: 4.6rem minmax(0, 1fr);
     gap: 0.55rem;
+  }
+
+  .project-drawer__panel {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .project-drawer__media,
+  .project-drawer__placeholder {
+    min-height: 15rem;
+  }
+
+  .project-drawer__details div {
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
   }
 
   .scroll-top {
