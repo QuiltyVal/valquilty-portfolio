@@ -90,7 +90,20 @@ function PlannerCaseStudy({ caseStudy, project }) {
             </h2>
             <p className="planner-case__subtitle">{caseStudy.subtitle}</p>
             <p>{caseStudy.intro}</p>
-            {project.image ? (
+            {project.video?.mp4 ? (
+              <figure className="planner-case__preview planner-case__preview--video">
+                <video
+                  aria-label={project.imageAlt}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  poster={project.video.poster ?? project.image}
+                >
+                  <source src={project.video.mp4} type="video/mp4" />
+                </video>
+              </figure>
+            ) : project.image ? (
               <figure className="planner-case__preview">
                 <img src={project.image} alt={project.imageAlt} loading="lazy" />
               </figure>
@@ -325,9 +338,14 @@ export function HomePage() {
                 <small>nudges, reports, task state</small>
               </li>
             </ul>
-            <ButtonLink to="#adhd-planner-case-study" variant="ghost">
-              View case study
-            </ButtonLink>
+            <div className="home-hero__panel-actions">
+              {caseStudyProject?.url ? (
+                <ExternalButtonLink href={caseStudyProject.url}>Try the demo</ExternalButtonLink>
+              ) : null}
+              <ButtonLink to="#adhd-planner-case-study" variant="ghost">
+                View case study
+              </ButtonLink>
+            </div>
           </Reveal>
         </div>
       </section>

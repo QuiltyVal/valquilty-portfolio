@@ -3219,7 +3219,10 @@ main {
   text-transform: lowercase;
 }
 
-.home-hero__panel .button {
+.home-hero__panel-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
   margin-top: var(--space-4);
 }
 
@@ -3997,12 +4000,18 @@ main {
   overflow: hidden;
 }
 
-.planner-case__preview img {
+.planner-case__preview img,
+.planner-case__preview video {
   width: 100%;
   height: min(22rem, 38vw);
+  display: block;
   object-fit: cover;
   object-position: top center;
   filter: sepia(0.04) saturate(0.86) brightness(0.78);
+}
+
+.planner-case__preview video {
+  background: #020303;
 }
 
 .planner-case__summary {
@@ -4371,7 +4380,8 @@ html[data-theme="light"] .project-card .project-card__hypothesis {
   color: rgba(45, 36, 29, 0.88);
 }
 
-html[data-theme="light"] .planner-case__preview img {
+html[data-theme="light"] .planner-case__preview img,
+html[data-theme="light"] .planner-case__preview video {
   filter: sepia(0.02) saturate(0.9) brightness(0.96);
 }
 

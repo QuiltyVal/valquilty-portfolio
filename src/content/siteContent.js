@@ -93,6 +93,10 @@ export const siteContent = {
       image: plannerPreview,
       imageMode: "screenshot",
       imageAlt: "ADHD Planner demo interface preview",
+      video: {
+        mp4: "/media/adhd-planner-demo.mp4",
+        poster: "/media/adhd-planner-demo-poster.jpg",
+      },
       description:
         "A playful executive-function companion for task paralysis: one daily mission, rescue mode for freeze moments, task worlds, Telegram/email nudges, and mascot-guided onboarding.",
       hypothesis:
