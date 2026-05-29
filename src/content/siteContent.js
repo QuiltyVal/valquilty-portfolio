@@ -43,6 +43,7 @@ export const siteContent = {
       "How can I contact Val?",
       "Why might Val fit a Product Owner role?",
       "What is ADHD Planner?",
+      "What does NovaHaus show?",
       "What can Val build with AI tools?",
       "What is the honest risk?",
     ],
@@ -285,6 +286,45 @@ export const siteContent = {
         ],
       },
     },
+    {
+      id: "novahaus",
+      eyebrow: "growth workflow / real-estate lead ops",
+      title: "NovaHaus",
+      status: "concept / prototype direction",
+      cardText:
+        "A marketer-side product idea for real-estate lead generation: property context, audience angles, campaign hypotheses, lead capture, and follow-up logic.",
+      description:
+        "A product concept for real-estate lead generation that turns property context, audience segments, campaign hypotheses, creative/message variants, lead capture, and follow-up logic into one structured workflow.",
+      hypothesis:
+        "Real-estate lead generation works better when marketing context, funnel logic, and follow-up operations are treated as one product system.",
+      workflow:
+        "Property input -> audience angle -> campaign hypothesis -> message variants -> lead capture -> follow-up pipeline.",
+      proves:
+        "Marketing-domain expertise from long experience, growth-product thinking, lead operations, workflow design, and practical AI-assisted business tooling.",
+      tags: ["real-estate leads", "growth workflow", "marketing ops", "AI-assisted campaigns"],
+      signals: [
+        "lead generation",
+        "real-estate workflow",
+        "campaign hypotheses",
+        "audience segments",
+        "funnel logic",
+        "commercial tooling",
+      ],
+      actions: [{ label: "concept in progress", disabled: true }],
+      featured: false,
+      walkthrough: {
+        planned: true,
+        placeholderTitle: "lead-generation workflow recording",
+        placeholderCopy:
+          "A short recording should show how property context becomes an audience angle, campaign hypothesis, message variants, lead capture, and follow-up workflow.",
+        show: [
+          "property and audience input",
+          "campaign hypothesis generation",
+          "message / creative variants",
+          "lead capture and follow-up logic",
+        ],
+      },
+    },
   ],
   featuredCaseStudy: {
     projectId: "planner",
@@ -409,7 +449,7 @@ export const siteContent = {
     {
       label: "workflow systems",
       copy: "I like products that make repeated work visible, structured, and easier to act on.",
-      items: ["internal tools", "dashboards", "automation flows"],
+      items: ["internal tools", "dashboards", "commercial workflows"],
     },
     {
       label: "UX / interaction",
@@ -433,6 +473,7 @@ export const siteContent = {
       "internal tools",
       "AI workflows",
       "productivity apps",
+      "growth / lead operations",
       "user-facing web apps",
       "automation systems",
     ],

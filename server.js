@@ -30,7 +30,7 @@ GitHub: https://github.com/QuiltyVal.
 Positioning:
 Val is growing toward Product Owner, Junior PM, AI product builder, and product operations roles.
 She is not positioning herself as a pure software engineer, ML engineer, data engineer, marketing copywriter, or AI video creative.
-Her strongest value: product thinking, AI-assisted prototyping, workflow design, UX logic, communication, and making product ideas tangible with modern AI tools.
+Her strongest value: product thinking, AI-assisted prototyping, workflow design, UX logic, communication, marketing-domain understanding from long experience, and making product ideas tangible with modern AI tools.
 
 Flagship project:
 ADHD Planner is a recovery-first planner for stuck brains. It is not a generic todo app.
@@ -44,6 +44,7 @@ Jobs Dashboard: protected job-search operations dashboard for vacancies, applica
 Dzyn / I Ching: public AI UX and randomness lab. Not mysticism as belief. Product hypothesis: randomness as an interaction primitive for decision workflows, prediction-like interfaces, and AI/API orchestration. Demo: https://i-ching.valquilty.com/en/i-ching.
 Dossier: personal calorie and macro tracker. Signal: mobile-first, privacy-first personal tooling, local AI on-device hypothesis for sensitive data. Demo: http://dossier.valquilty.com/.
 Gemini Creative Generator: private prototype using Gemini API to read a reference creative, accept company assets, and generate brand-consistent ad concepts. Signal: multimodal prompting, brand constraints, asset reuse, generation workflow.
+NovaHaus: concept / prototype direction for real-estate lead generation. It turns property context, audience segments, campaign hypotheses, message variants, lead capture, and follow-up logic into one structured commercial workflow. Signal: Val understands marketing and lead-generation operations from long work experience, but she is not positioning as a marketing-only candidate.
 
 Best fit:
 Teams building AI workflows, internal tools, productivity apps, automations, bots, user-facing web products, or product operations systems.
@@ -406,14 +407,29 @@ function createPortfolioFallback(question) {
     normalized.includes("bot") ||
     normalized.includes("ии")
   ) {
-    return "Val uses AI tools as execution partners: specs, flow design, interface prototypes, API-backed demos, automations, bots, and product experiments. The portfolio proof is ADHD Planner, Jobs Dashboard, Dzyn / I Ching, Dossier, and a private Gemini creative generator.";
+    return "Val uses AI tools as execution partners: specs, flow design, interface prototypes, API-backed demos, automations, bots, and product experiments. The portfolio proof is ADHD Planner, Jobs Dashboard, Dzyn / I Ching, Dossier, a private Gemini creative generator, and NovaHaus.";
+  }
+
+  if (
+    normalized.includes("novahaus") ||
+    normalized.includes("nova haus") ||
+    normalized.includes("marketing") ||
+    normalized.includes("lead") ||
+    normalized.includes("real estate") ||
+    normalized.includes("real-estate") ||
+    normalized.includes("growth") ||
+    normalized.includes("маркет") ||
+    normalized.includes("лид") ||
+    normalized.includes("недвиж")
+  ) {
+    return "NovaHaus is Val's real-estate lead-generation product concept. It shows she understands marketing and lead operations from long experience and can turn that domain knowledge into product workflows: property context, audience angles, campaign hypotheses, message variants, lead capture, and follow-up logic.";
   }
 
   if (normalized.includes("contact") || normalized.includes("email") || normalized.includes("linkedin") || normalized.includes("контакт")) {
     return "You can contact Val at me@valquilty.com, on LinkedIn at linkedin.com/in/valentyn-havrychenko, or on GitHub at github.com/QuiltyVal.";
   }
 
-  return "Val turns messy human workflows into usable product prototypes. Her flagship proof is ADHD Planner; supporting projects show job-search operations, AI UX/randomness workflows, privacy-first personal tooling, and multimodal creative generation.";
+  return "Val turns messy human workflows into usable product prototypes. Her flagship proof is ADHD Planner; supporting projects show job-search operations, AI UX/randomness workflows, privacy-first personal tooling, multimodal creative generation, and marketing-domain workflow thinking through NovaHaus.";
 }
 
 async function createPortfolioChatReply(question, modelInfo) {

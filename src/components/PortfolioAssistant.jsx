@@ -78,6 +78,7 @@ function createLocalReply(question) {
   const dzyn = projects.find((project) => project.id === "i-ching");
   const dossier = projects.find((project) => project.id === "dossier");
   const creative = projects.find((project) => project.id === "creative-generator");
+  const novaHaus = projects.find((project) => project.id === "novahaus");
 
   if (!query) {
     return initialMessages[0].text;
@@ -96,7 +97,7 @@ function createLocalReply(question) {
   }
 
   if (hasAny(query, ["ai", "codex", "chatgpt", "claude", "cursor", "prototype", "api", "automation", "bot", "llm", "ии"])) {
-    return `Val uses AI tools as execution partners: specs, flow design, interface prototypes, API-backed demos, automations, bots, and product experiments. The evidence is the portfolio itself: ADHD Planner, Jobs Dashboard, Dzyn / I Ching, Dossier, and a private Gemini creative generator.`;
+    return `Val uses AI tools as execution partners: specs, flow design, interface prototypes, API-backed demos, automations, bots, and product experiments. The evidence is the portfolio itself: ADHD Planner, Jobs Dashboard, Dzyn / I Ching, Dossier, Gemini Creative Generator, and NovaHaus.`;
   }
 
   if (hasAny(query, ["jobs", "dashboard", "vacancy", "applications", "cv", "ваканс"])) {
@@ -115,11 +116,30 @@ function createLocalReply(question) {
     return `${summarizeProject(creative)} It is private, but the product signal is clear: multimodal prompting, brand constraints, asset reuse, and generation workflow design.`;
   }
 
+  if (
+    hasAny(query, [
+      "novahaus",
+      "nova haus",
+      "real estate",
+      "real-estate",
+      "lead",
+      "leads",
+      "leadgen",
+      "marketing",
+      "growth",
+      "маркет",
+      "лид",
+      "недвиж",
+    ])
+  ) {
+    return `${summarizeProject(novaHaus)} The framing matters: this uses Val's long marketing experience as domain knowledge for product tooling, not as a pivot into marketing-only roles.`;
+  }
+
   if (hasAny(query, ["risk", "weak", "limit", "engineer", "coding", "software", "ml", "data", "риск"])) {
     return `The honest risk: Val is not selling herself as a hard software engineer, ML engineer, or data engineer. The fit is stronger for product ownership, product operations, AI-assisted prototyping, workflow design, internal tools, and user-facing product flows.`;
   }
 
-  return `${profile.name} turns messy human workflows into usable product prototypes. ${teamFit.copy} Her flagship proof is ADHD Planner; supporting projects show job-search operations, AI UX/randomness workflows, privacy-first personal tooling, and multimodal creative generation.`;
+  return `${profile.name} turns messy human workflows into usable product prototypes. ${teamFit.copy} Her flagship proof is ADHD Planner; supporting projects show job-search operations, AI UX/randomness workflows, privacy-first personal tooling, multimodal creative generation, and marketing-domain workflow thinking through NovaHaus.`;
 }
 
 async function requestRemoteReply(question) {
